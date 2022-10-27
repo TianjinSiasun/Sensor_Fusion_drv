@@ -1,0 +1,101 @@
+/* SPDX-License-Identifier: GPL-2.0 */
+#ifndef __INC_TERASIC_INCLUDE_H__
+#define __INC_TERASIC_INCLUDE_H__
+
+/* BUF and SYNC Config Register */
+#define REG_BUF_CONTROL         0x00
+#define REG_FRAME_NUMBER        0x01
+#define REG_FRAME_OFFSET        0x02
+#define REG_CAMERA_OFFSET       0x03
+#define REG_LIDAR_OFFSET        0x04
+#define REG_LIDAR_STATUS        0x05
+#define REG_CAMERA0_STATUS      0x06
+#define REG_CAMERA1_STATUS      0x07
+#define REG_CAMERA2_STATUS      0x08
+#define REG_CAMERA3_STATUS      0x09
+#define REG_FIRST_SENSOR        0x0A
+#define REG_IRQ_DISABLE         0x0B
+
+#define REG_SENSOR_PERIOD       0x11
+#define REG_CAMERA0_SHIFT       0x12
+#define REG_CAMERA1_SHIFT       0x13
+#define REG_CAMERA2_SHIFT       0x14
+#define REG_CAMERA3_SHIFT       0x15
+#define REG_CAMERA0_COMPENSATE  0x16
+#define REG_CAMERA1_COMPENSATE  0x17
+#define REG_CAMERA2_COMPENSATE  0x18
+#define REG_CAMERA3_COMPENSATE  0x19
+#define REG_TRIGGER_DEAD_TIME   0x1A
+#define REG_CAMERA_TARGET_MODE  0x1B
+
+/* Timestamp Register */
+#define REG_TIME_MODE           0x00
+#define REG_TIME_BIG_SET        0x01
+#define REG_TIME_SMALL_SET      0x02
+#define REG_TIME_HIGH_READ      0x03
+#define REG_TIME_BIG_READ       0x04
+#define REG_TIME_SMALL_READ     0x05
+
+/* IO REG TYPE ID Register */
+#define REG_TYPE_ID             0x00
+
+/* IO CAMERA CTRL Register */
+#define REG_IO_CAMERA_CTRL      0x00
+
+/* IO BRIDGE Register */
+#define REG_IO_BRIDGE_CTRL      0x00
+
+/* CAMERA_SYNC Register */
+#define REG_CAMERA_SYNC_GO      0x05
+
+#define OV8865_CAMERA_PWDN_POLARITY 0
+#define MIPI_BRIDGE_PWDN_POLARITY 0
+
+#define CAMERA_MIPI_1_IO_REG_TYPE_ID_BASE           0x000
+#define CAMERA_MIPI_1_IO_CAMERA_CTRL_BASE           0x010
+#define CAMERA_MIPI_1_TERASIC_CAMERA_SYNC_0_BASE    0x020
+#define CAMERA_MIPI_1_I2C_CAMERA_CTRL_BASE          0x040
+#define CAMERA_MIPI_1_IO_BRIDGE_CTRL_BASE           0x060
+
+#define TERASIC_VIP_SCHEDULE_0_BASE                 0x080
+
+#define CAMERA_LVDS_0_IO_REG_TYPE_ID_BASE           0x100
+#define CAMERA_LVDS_0_IO_CAMERA_CTRL_BASE           0x110
+#define CAMERA_LVDS_0_TERASIC_CAMERA_SYNC_0_BASE    0x120
+#define CAMERA_LVDS_0_I2C_CAMERA_CTRL_BASE          0x140
+#define CAMERA_LVDS_0_IO_BRIDGE_CTRL_BASE           0x160
+
+#define CAMERA_LVDS_1_IO_REG_TYPE_ID_BASE           0x180
+#define CAMERA_LVDS_1_IO_CAMERA_CTRL_BASE           0x190
+#define CAMERA_LVDS_1_TERASIC_CAMERA_SYNC_0_BASE    0x1a0
+#define CAMERA_LVDS_1_I2C_CAMERA_CTRL_BASE          0x1c0
+#define CAMERA_LVDS_1_IO_BRIDGE_CTRL_BASE           0x1e0
+
+#define CAMERA_MIPI_0_IO_REG_TYPE_ID_BASE           0x200
+#define CAMERA_MIPI_0_IO_CAMERA_CTRL_BASE           0x210
+#define CAMERA_MIPI_0_TERASIC_CAMERA_SYNC_0_BASE    0x220
+#define CAMERA_MIPI_0_I2C_CAMERA_CTRL_BASE          0x240
+#define CAMERA_MIPI_0_IO_BRIDGE_CTRL_BASE           0x260
+
+#define TIME_STAMP_0_BASE                           0x280
+
+#define CAMERA_LVDS_2_IO_REG_TYPE_ID_BASE           0x300
+#define CAMERA_LVDS_2_IO_CAMERA_CTRL_BASE           0x310
+#define CAMERA_LVDS_2_TERASIC_CAMERA_SYNC_0_BASE    0x320
+#define CAMERA_LVDS_2_I2C_CAMERA_CTRL_BASE          0x340
+#define CAMERA_LVDS_2_IO_BRIDGE_CTRL_BASE           0x360
+
+#define CAMERA_LVDS_3_IO_REG_TYPE_ID_BASE           0x380
+#define CAMERA_LVDS_3_IO_CAMERA_CTRL_BASE           0x390
+#define CAMERA_LVDS_3_TERASIC_CAMERA_SYNC_0_BASE    0x3A0
+#define CAMERA_LVDS_3_I2C_CAMERA_CTRL_BASE          0x3C0
+#define CAMERA_LVDS_3_IO_BRIDGE_CTRL_BASE           0x3E0
+
+#define LIDAR_0_LIDAR_UDP_PARSER_0_BASE             0x400
+#define LIDAR_0_MAC_FOR_LIDAR_0_BASE                0x500
+
+#define PCIE_DMA_CTL_PCIE_IRQ_DMA_IRQ_READ_SLAVE_BASE 0xcf90
+#define PCIE_DMA_CTL_PCIE_IRQ_DMA_IRQ_MASK_SLAVE_BASE 0xcfa0
+
+#endif /* __INC_TERASIC_INCLUDE_H__ */
+
