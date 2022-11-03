@@ -46,9 +46,11 @@
 #define MAX_MAIN_CONFIG 0x04
 #define MAX_SER_GAIN 0x08
 
-#define I2C_MAX_RATE 400
-#define I2C_LVDS_RATE 60
-#define I2C_MIPI_RATE 80
+#define I2C_REF_CLK_RATE    1*1000*1000
+#define I2C_MAX_CLK_RATE    50*1000*1000
+#define I2C_MAX_RATE        400 * 1000
+#define I2C_LVDS_RATE       60 * 1000
+#define I2C_MIPI_RATE       80 * 1000
 
 /**
  * SZ_MIPI_REG_T - config data for bridge

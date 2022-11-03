@@ -683,7 +683,7 @@ int siasun_lvds_procedure(struct siasun_video_dev *svid)
         return -1;
     }
 
-    ret = siasun_i2c_clk_init(svid, 1*1000*1000, I2C_LVDS_RATE*1000);
+    ret = siasun_i2c_clk_init(svid, I2C_REF_CLK_RATE, I2C_LVDS_RATE);
     if (ret)
     {
         printk(KERN_ERR "failed to init GMSL RX i2c\r\n");
@@ -697,10 +697,37 @@ int siasun_lvds_procedure(struct siasun_video_dev *svid)
         return -EIO;
     }
 
-    siasun_i2c_gmslwrite(adap, GMSL_RX_I2C_ADDR, MAX_I2C_CONFIG, 0xEE);
-    siasun_i2c_gmslwrite(adap, GMSL_TX_I2C_ADDR, MAX_MAIN_CONFIG, 0x47);
-    siasun_i2c_gmslwrite(adap, GMSL_RX_I2C_ADDR, MAX_I2C_CONFIG, 0x6E);
-    siasun_i2c_gmslwrite(adap, GMSL_TX_I2C_ADDR, 0x01, GMSL_RX_I2C_ADDR);
+    ret = siasun_i2c_gmslwrite(adap, GMSL_RX_I2C_ADDR, MAX_I2C_CONFIG, 0xEE);
+    if (ret < 0)
+    {
+        i2c_put_adapter(adap);
+        printk(KERN_ERR "failed to write RX I2C CONFIG\r\n");
+        return ret;
+    }
+
+    ret = siasun_i2c_gmslwrite(adap, GMSL_TX_I2C_ADDR, MAX_MAIN_CONFIG, 0x47);
+    if (ret < 0)
+    {
+        i2c_put_adapter(adap);
+        printk(KERN_ERR "failed to write TX MAIN CONFIG\r\n");
+        return ret;
+    }
+
+    ret = siasun_i2c_gmslwrite(adap, GMSL_RX_I2C_ADDR, MAX_I2C_CONFIG, 0x6E);
+    if (ret < 0)
+    {
+        i2c_put_adapter(adap);
+        printk(KERN_ERR "failed to write RX I2C CONFIG2\r\n");
+        return ret;
+    }
+
+    ret = siasun_i2c_gmslwrite(adap, GMSL_TX_I2C_ADDR, 0x01, GMSL_RX_I2C_ADDR);
+    if (ret < 0)
+    {
+        i2c_put_adapter(adap);
+        printk(KERN_ERR "failed to write TX I2C ADDR\r\n");
+        return ret;
+    }
 
     if (siasun_i2c_gmslread(adap, GMSL_TX_I2C_ADDR, MAX_ID) != 0x41)
     {
@@ -765,7 +792,7 @@ int siasun_lvds_procedure(struct siasun_video_dev *svid)
 
     mdelay(10);
 
-    ret = siasun_i2c_clk_init(svid, 50*1000*1000, 400*1000);
+    ret = siasun_i2c_clk_init(svid, I2C_MAX_CLK_RATE, I2C_MAX_RATE);
     if (ret)
     {
         i2c_put_adapter(adap);
@@ -816,7 +843,7 @@ int siasun_mipi_procedure(struct siasun_video_dev *svid)
 
     mdelay(10);
 
-    ret = siasun_i2c_clk_init(svid, 50*1000*1000, 400*1000);
+    ret = siasun_i2c_clk_init(svid, I2C_MAX_CLK_RATE, I2C_MAX_RATE);
     if (ret)
     {
         printk(KERN_ERR "failed to init GMSL RX i2c\r\n");

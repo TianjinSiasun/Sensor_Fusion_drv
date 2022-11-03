@@ -64,7 +64,7 @@ static void task_handler(unsigned long data)
         dma_flag = 0;
         siasun_dev->dma_ready = 0;
 
-        for (i = 0; i < 128; i++)
+        for (i = 0; i < ALTERA_DMA_DESCRIPTOR_NUM; i++)
         {
             siasun_dev->table_virt_addr->header.flags[i] = 0;
         }
@@ -83,8 +83,8 @@ static void task_handler(unsigned long data)
             buf_index = siasun_queue_del(siasun_pcie_dev.lidar_q);
             DPRINTK("liadr index = %d\n", buf_index);
             set_write_table(&siasun_dev->table_virt_addr->descriptors[table_index],
-                            0x100000000 + buf_index * 0x4000000 + 0x3000000,
-                            siasun_dev->lidar.busaddr, 0x12c00, table_index);
+                            FPGA_DDR3_BASE + buf_index * FPGA_BUF_SIZE + FPGA_LIDAR_OFFSET,
+                            siasun_dev->lidar.busaddr, FPGA_LIDAR_MOVE_SIZE, table_index);
             if (table_index == 127)
             {
                 table_index = 0;
@@ -105,8 +105,8 @@ static void task_handler(unsigned long data)
             for (i = 0; i < 8; i++)
             {
                 set_write_table(&siasun_dev->table_virt_addr->descriptors[table_index],
-                                0x100000000 + buf_index * 0x4000000 + i * 0x80000,
-                                siasun_dev->camera0.busaddr1 + i * 0x80000, 0x20000, table_index);
+                                FPGA_DDR3_BASE + buf_index * FPGA_BUF_SIZE + FPGA_CAMERA0_OFFSET + i * FPGA_CAMERA_MOVE_OFFSET,
+                                siasun_dev->camera0.busaddr1 + i * FPGA_CAMERA_MOVE_OFFSET, FPGA_CAMERA_MOVE_SIZE, table_index);
 
                 if (table_index == 127)
                 {
@@ -122,8 +122,8 @@ static void task_handler(unsigned long data)
             for (i = 0; i < 3; i++)
             {
                 set_write_table(&siasun_dev->table_virt_addr->descriptors[table_index],
-                                0x100000000 + buf_index * 0x4000000 + (i + 8) * 0x80000,
-                                siasun_dev->camera0.busaddr2 + i * 0x80000, 0x20000, table_index);
+                                FPGA_DDR3_BASE + buf_index * FPGA_BUF_SIZE + (i + 8) * FPGA_CAMERA_MOVE_OFFSET,
+                                siasun_dev->camera0.busaddr2 + i * FPGA_CAMERA_MOVE_OFFSET, FPGA_CAMERA_MOVE_SIZE, table_index);
 
                 if (table_index == 127)
                 {
@@ -147,8 +147,8 @@ static void task_handler(unsigned long data)
             for (i = 0; i < 8; i++)
             {
                 set_write_table(&siasun_dev->table_virt_addr->descriptors[table_index],
-                                0x100000000 + buf_index * 0x4000000 + 0x800000 + i * 0x80000,
-                                siasun_dev->camera1.busaddr1 + i * 0x80000, 0x20000, table_index);
+                                FPGA_DDR3_BASE + buf_index * FPGA_BUF_SIZE + FPGA_CAMERA1_OFFSET + i * FPGA_CAMERA_MOVE_OFFSET,
+                                siasun_dev->camera1.busaddr1 + i * FPGA_CAMERA_MOVE_OFFSET, FPGA_CAMERA_MOVE_SIZE, table_index);
 
                 if (table_index == 127)
                 {
@@ -164,8 +164,8 @@ static void task_handler(unsigned long data)
             for (i = 0; i < 3; i++)
             {
                 set_write_table(&siasun_dev->table_virt_addr->descriptors[table_index],
-                                0x100000000 + buf_index * 0x4000000 + 0x800000 + (i + 8) * 0x80000,
-                                siasun_dev->camera1.busaddr2 + i * 0x80000, 0x20000, table_index);
+                                FPGA_DDR3_BASE + buf_index * FPGA_BUF_SIZE + FPGA_CAMERA1_OFFSET + (i + 8) * FPGA_CAMERA_MOVE_OFFSET,
+                                siasun_dev->camera1.busaddr2 + i * FPGA_CAMERA_MOVE_OFFSET, FPGA_CAMERA_MOVE_SIZE, table_index);
 
                 if (table_index == 127)
                 {
@@ -189,8 +189,8 @@ static void task_handler(unsigned long data)
             for (i = 0; i < 8; i++)
             {
                 set_write_table(&siasun_dev->table_virt_addr->descriptors[table_index],
-                                0x100000000 + buf_index * 0x4000000 + 0x1000000 + i * 0x80000,
-                                siasun_dev->camera2.busaddr1 + i * 0x80000, 0x20000, table_index);
+                                FPGA_DDR3_BASE + buf_index * FPGA_BUF_SIZE + FPGA_CAMERA2_OFFSET + i * FPGA_CAMERA_MOVE_OFFSET,
+                                siasun_dev->camera2.busaddr1 + i * FPGA_CAMERA_MOVE_OFFSET, FPGA_CAMERA_MOVE_SIZE, table_index);
 
                 if (table_index == 127)
                 {
@@ -206,8 +206,8 @@ static void task_handler(unsigned long data)
             for (i = 0; i < 3; i++)
             {
                 set_write_table(&siasun_dev->table_virt_addr->descriptors[table_index],
-                                0x100000000 + buf_index * 0x4000000 + 0x1000000 + (i + 8) * 0x80000,
-                                siasun_dev->camera2.busaddr2 + i * 0x80000, 0x20000, table_index);
+                                FPGA_DDR3_BASE + buf_index * FPGA_BUF_SIZE + FPGA_CAMERA2_OFFSET + (i + 8) * FPGA_CAMERA_MOVE_OFFSET,
+                                siasun_dev->camera2.busaddr2 + i * FPGA_CAMERA_MOVE_OFFSET, FPGA_CAMERA_MOVE_SIZE, table_index);
 
                 if (table_index == 127)
                 {
@@ -230,8 +230,8 @@ static void task_handler(unsigned long data)
             for (i = 0; i < 8; i++)
             {
                 set_write_table(&siasun_dev->table_virt_addr->descriptors[table_index],
-                                0x100000000 + buf_index * 0x4000000 + 0x1800000 + i * 0x80000,
-                                siasun_dev->camera3.busaddr1 + i * 0x80000, 0x20000, table_index);
+                                FPGA_DDR3_BASE + buf_index * FPGA_BUF_SIZE + FPGA_CAMERA3_OFFSET + i * FPGA_CAMERA_MOVE_OFFSET,
+                                siasun_dev->camera3.busaddr1 + i * FPGA_CAMERA_MOVE_OFFSET, FPGA_CAMERA_MOVE_SIZE, table_index);
 
                 if (table_index == 127)
                 {
@@ -247,8 +247,8 @@ static void task_handler(unsigned long data)
             for (i = 0; i < 3; i++)
             {
                 set_write_table(&siasun_dev->table_virt_addr->descriptors[table_index],
-                                0x100000000 + buf_index * 0x4000000 + 0x1800000 + (i + 8) * 0x80000,
-                                siasun_dev->camera3.busaddr2 + i * 0x80000, 0x20000, table_index);
+                                FPGA_DDR3_BASE + buf_index * FPGA_BUF_SIZE + FPGA_CAMERA3_OFFSET + (i + 8) * FPGA_CAMERA_MOVE_OFFSET,
+                                siasun_dev->camera3.busaddr2 + i * FPGA_CAMERA_MOVE_OFFSET, FPGA_CAMERA_MOVE_SIZE, table_index);
 
                 if (table_index == 127)
                 {
@@ -270,8 +270,8 @@ static void task_handler(unsigned long data)
             for (i = 0; i < 8; i++)
             {
                 set_write_table(&siasun_dev->table_virt_addr->descriptors[table_index],
-                                0x100000000 + buf_index * 0x4000000 + 0x2000000 + i * 0x80000,
-                                siasun_dev->camera3.busaddr1 + i * 0x80000, 0x20000, table_index);
+                                FPGA_DDR3_BASE + buf_index * FPGA_BUF_SIZE + FPGA_CAMERA4_OFFSET + i * FPGA_CAMERA_MOVE_OFFSET,
+                                siasun_dev->camera3.busaddr1 + i * FPGA_CAMERA_MOVE_OFFSET, FPGA_CAMERA_MOVE_SIZE, table_index);
 
                 if (table_index == 127)
                 {
@@ -287,8 +287,8 @@ static void task_handler(unsigned long data)
             for (i = 0; i < 3; i++)
             {
                 set_write_table(&siasun_dev->table_virt_addr->descriptors[table_index],
-                                0x100000000 + buf_index * 0x4000000 + 0x2000000 + (i + 8) * 0x80000,
-                                siasun_dev->camera3.busaddr2 + i * 0x80000, 0x20000, table_index);
+                                FPGA_DDR3_BASE + buf_index * FPGA_BUF_SIZE + FPGA_CAMERA4_OFFSET + (i + 8) * FPGA_CAMERA_MOVE_OFFSET,
+                                siasun_dev->camera3.busaddr2 + i * FPGA_CAMERA_MOVE_OFFSET, FPGA_CAMERA_MOVE_SIZE, table_index);
 
                 if (table_index == 127)
                 {
@@ -310,8 +310,8 @@ static void task_handler(unsigned long data)
             for (i = 0; i < 8; i++)
             {
                 set_write_table(&siasun_dev->table_virt_addr->descriptors[table_index],
-                                0x100000000 + buf_index * 0x4000000 + 0x2800000 + i * 0x80000,
-                                siasun_dev->camera3.busaddr1 + i * 0x80000, 0x20000, table_index);
+                                FPGA_DDR3_BASE + buf_index * FPGA_BUF_SIZE + FPGA_CAMERA5_OFFSET + i * FPGA_CAMERA_MOVE_OFFSET,
+                                siasun_dev->camera3.busaddr1 + i * FPGA_CAMERA_MOVE_OFFSET, FPGA_CAMERA_MOVE_SIZE, table_index);
 
                 if (table_index == 127)
                 {
@@ -327,8 +327,8 @@ static void task_handler(unsigned long data)
             for (i = 0; i < 3; i++)
             {
                 set_write_table(&siasun_dev->table_virt_addr->descriptors[table_index],
-                                0x100000000 + buf_index * 0x4000000 + 0x2800000 + (i + 8) * 0x80000,
-                                siasun_dev->camera3.busaddr2 + i * 0x80000, 0x20000, table_index);
+                                FPGA_DDR3_BASE + buf_index * FPGA_BUF_SIZE + FPGA_CAMERA5_OFFSET + (i + 8) * FPGA_CAMERA_MOVE_OFFSET,
+                                siasun_dev->camera3.busaddr2 + i * FPGA_CAMERA_MOVE_OFFSET, FPGA_CAMERA_MOVE_SIZE, table_index);
 
                 if (table_index == 127)
                 {
@@ -441,7 +441,7 @@ irqreturn_t siasun_irq(int irq, void *dev_id)
     {
         DPRINTK("irq_stat = %#x\n", irq_status);
 
-        if (irq_status & 0x01)
+        if (irq_status & PCIE_LIDAR_IRQ)
         {
             lidar_stat = readl(siasun_dev->irq_base + PCIE_LIDAR_IRQ_STATUS);
             val = (lidar_stat >> 24) & 0xff;
@@ -463,7 +463,7 @@ irqreturn_t siasun_irq(int irq, void *dev_id)
             ret = IRQ_HANDLED;
         }
 
-        if (irq_status & 0x02)
+        if (irq_status & PCIE_CAMERA0_IRQ)
         {
             buf_index = (readl(siasun_dev->irq_base + PCIE_CAMERA0_IRQ_STATUS) >> 24) & 0xff;
 
@@ -473,7 +473,7 @@ irqreturn_t siasun_irq(int irq, void *dev_id)
             ret = IRQ_HANDLED;
         }
 
-        if (irq_status & 0x04)
+        if (irq_status & PCIE_CAMERA1_IRQ)
         {
             buf_index = (readl(siasun_dev->irq_base + PCIE_CAMERA1_IRQ_STATUS) >> 24) & 0xff;
 
@@ -483,7 +483,7 @@ irqreturn_t siasun_irq(int irq, void *dev_id)
             ret = IRQ_HANDLED;
         }
 
-        if (irq_status & 0x08)
+        if (irq_status & PCIE_CAMERA2_IRQ)
         {
             buf_index = (readl(siasun_dev->irq_base + PCIE_CAMERA2_IRQ_STATUS) >> 24) & 0xff;
 
@@ -493,7 +493,7 @@ irqreturn_t siasun_irq(int irq, void *dev_id)
             ret = IRQ_HANDLED;
         }
 
-        if (irq_status & 0x10)
+        if (irq_status & PCIE_CAMERA3_IRQ)
         {
             buf_index = (readl(siasun_dev->irq_base + PCIE_CAMERA3_IRQ_STATUS) >> 24) & 0xff;
 
@@ -503,7 +503,7 @@ irqreturn_t siasun_irq(int irq, void *dev_id)
             ret = IRQ_HANDLED;
         }
 
-        if (irq_status & 0x20)
+        if (irq_status & PCIE_CAMERA4_IRQ)
         {
             buf_index = (readl(siasun_dev->irq_base + PCIE_CAMERA4_IRQ_STATUS) >> 24) & 0xff;
 
@@ -513,7 +513,7 @@ irqreturn_t siasun_irq(int irq, void *dev_id)
             ret = IRQ_HANDLED;
         }
 
-        if (irq_status & 0x40)
+        if (irq_status & PCIE_CAMERA5_IRQ)
         {
             buf_index = (readl(siasun_dev->irq_base + PCIE_CAMERA5_IRQ_STATUS) >> 24) & 0xff;
 

@@ -13,7 +13,7 @@
 
 int Check_Lidar_RPM(unsigned short rpm)
 {
-    if ((rpm != 1200) && (rpm != 600) && (rpm != 300))
+    if ((rpm != LIDAR_MOTOR_SPEED_20_FPS) && (rpm != LIDAR_MOTOR_SPEED_10_FPS) && (rpm != LIDAR_MOTOR_SPEED_5_FPS))
     {
         printf("ERR: lidar fps can only be set to : 20、10 or 5.\n");
         return -EINVAL;
@@ -70,7 +70,8 @@ int Check_Lidar_TimeStamp(RSTimestampYMD timestamp)
     }
     if (timestamp.month == 4)
     {
-        if (((((timestamp.year + 2000) % 4) == 0) && (((timestamp.year + 2000) % 100) != 0)) || (((timestamp.year + 2000) % 400) == 0))
+        if (((((timestamp.year + 2000) % 4) == 0) && (((timestamp.year + 2000) % 100) != 0)) ||
+            (((timestamp.year + 2000) % 400) == 0))
         {
             if (timestamp.day > 29)
             {
@@ -89,7 +90,9 @@ int Check_Lidar_TimeStamp(RSTimestampYMD timestamp)
     }
     else
     {
-        if ((timestamp.month == 1) || (timestamp.month == 3) || (timestamp.month == 5) || (timestamp.month == 7) || (timestamp.month == 8) || (timestamp.month == 10) || (timestamp.month == 12))
+        if ((timestamp.month == 1) || (timestamp.month == 3) || (timestamp.month == 5) ||
+            (timestamp.month == 7) || (timestamp.month == 8) || (timestamp.month == 10) ||
+            (timestamp.month == 12))
         {
             if (timestamp.day > 31)
             {
@@ -217,13 +220,13 @@ int Lidar_Set_fps(int fd, unsigned int fps)
     switch (fps)
     {
     case 20:
-        rpm = 0x04B0;
+        rpm = LIDAR_MOTOR_SPEED_20_FPS;
         break;
     case 10:
-        rpm = 0x0258;
+        rpm = LIDAR_MOTOR_SPEED_10_FPS;
         break;
     case 5:
-        rpm = 0X012C;
+        rpm = LIDAR_MOTOR_SPEED_5_FPS;
         break;
 
     default:
@@ -322,7 +325,13 @@ int Lidar_Set_Target_Angle(int fd, unsigned int angle)
 int Lidar_mmap_Addr(int fd, unsigned int *phy_addr)
 {
     int ret = 0;
+    *phy_addr = 0;
     ret = ioctl(fd, MMAP_RHY_OFFSET, phy_addr);
+    if (*phy_addr == 0)
+    {
+        ret = -EPERM;
+    }
+
     return ret;
 }
 
@@ -433,7 +442,8 @@ int Camera_Angle_FPS_Set(int fd, SyncCfg sync)
         printf("ERR: The set fps can only be set to : 20、10 or 5.\n");
         return -EINVAL;
     }
-    if ((sync.camera0_angle > 360) || (sync.camera1_angle > 360) || (sync.camera2_angle > 360) || (sync.camera3_angle > 360))
+    if ((sync.camera0_angle > 360) || (sync.camera1_angle > 360) ||
+        (sync.camera2_angle > 360) || (sync.camera3_angle > 360))
     {
         printf("ERR: The set camer angle is outside the range of 0 to 360.\n");
         return -EINVAL;

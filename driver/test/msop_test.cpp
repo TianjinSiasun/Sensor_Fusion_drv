@@ -13,10 +13,11 @@
 
 #define MSOP_PORT 6699
 #define DIFOP_PORT 7788
+#define LIDAR_SIZE (300 * 1024)
 
 unsigned char lidarip[4] = {192, 168, 1, 200};
 unsigned char hostip[4] = {192, 168, 1, 102};
-unsigned char mac[6] = {64, 44, 110, 130, 104, 226}; //本机
+unsigned char mac[6] = {64, 44, 110, 130, 104, 226};
 
 void SYS_TIME_READ(RSTimestampYMD *time)
 {
@@ -42,7 +43,7 @@ int main(int argc, char *argv[])
     int fd_cfg;
     unsigned int phy_addr;
     RSTimestampYMD lidar_time;
-    unsigned char *lidar_output = (unsigned char *)malloc(300 * 1024);
+    unsigned char *lidar_output = (unsigned char *)malloc(LIDAR_SIZE);
     TimeStampCfg fpga_time;
     RS16DifopPkt difop;
     RSFOV fov_set;
@@ -69,38 +70,89 @@ int main(int argc, char *argv[])
         return -1;
     }
 
-    memset(lidar_output, 0, 300 * 1024);
-    Lidar_mmap_Addr(fd_lidar, &phy_addr);
-    lidar_output = (unsigned char *)mmap(0, 300 * 1024, PROT_READ, MAP_SHARED, fd_lidar, phy_addr);
-    IRQ_Mask_Enable(fd_cfg, 0x0); // enable lidar irq
-    Buf_Sys_Enable(fd_cfg, 0);    // Disable sys
+    memset(lidar_output, 0, LIDAR_SIZE);
+    ret = Lidar_mmap_Addr(fd_lidar, &phy_addr);
+    if (ret != 0)
+    {
+        printf("ERRNO = %d", ret);
+        return ret;
+    }
+    lidar_output = (unsigned char *)mmap(0, LIDAR_SIZE, PROT_READ, MAP_SHARED, fd_lidar, phy_addr);
+    ret = IRQ_Mask_Enable(fd_cfg, 0x0); // disable lidar irq
+    if (ret != 0)
+    {
+        printf("ERRNO = %d", ret);
+        return ret;
+    }
+    ret = Buf_Sys_Enable(fd_cfg, 0); // Disable sys
+    if (ret != 0)
+    {
+        printf("ERRNO = %d", ret);
+        return ret;
+    }
 
     fpga_time.mode = 0;
     SYS_TIME_READ((RSTimestampYMD *)&fpga_time.ts);
-    FPGA_TimeStamp_Set(fd_cfg, fpga_time); // set fpga time update by lidar
+    ret = FPGA_TimeStamp_Set(fd_cfg, fpga_time); // set fpga time update by lidar
+    if (ret != 0)
+    {
+        printf("ERRNO = %d", ret);
+        return ret;
+    }
 
     memcpy(pib_eth.pib_ip, hostip, 4);
     pib_eth.msop_port = MSOP_PORT;
     pib_eth.difop_port = DIFOP_PORT;
-    PIB_Set_Ethnet(fd_lidar, pib_eth); // set PIB ETH
+    ret = PIB_Set_Ethnet(fd_lidar, pib_eth); // set PIB ETH
+    if (ret != 0)
+    {
+        printf("ERRNO = %d", ret);
+        return ret;
+    }
 
-    Lidar_Init(fd_lidar);
+    ret = ret = Lidar_Init(fd_lidar);
+    if (ret != 0)
+    {
+        printf("ERRNO = %d", ret);
+        return ret;
+    }
 
     SYS_TIME_READ(&lidar_time);
-    Lidar_Set_TimeStamp(fd_lidar, lidar_time);
+    ret = Lidar_Set_TimeStamp(fd_lidar, lidar_time);
+    if (ret != 0)
+    {
+        printf("ERRNO = %d", ret);
+        return ret;
+    }
 
     sleep(10);
 
-    Lidar_Get_DIFOP(fd_lidar, &difop);
+    ret = Lidar_Get_DIFOP(fd_lidar, &difop);
+    if (ret != 0)
+    {
+        printf("ERRNO = %d", ret);
+        return ret;
+    }
+
     printf("timestamp : %d-%d-%d  %d:%d:%d:%d:%d\n",
            difop.timestamp.year + 2000, difop.timestamp.month, difop.timestamp.day,
            difop.timestamp.hour, difop.timestamp.minute, difop.timestamp.second,
            ((difop.timestamp.ms & 0xff00) >> 8) | ((difop.timestamp.ms & 0x00ff) << 8),
            ((difop.timestamp.us & 0xff00) >> 8) | ((difop.timestamp.us & 0x00ff) << 8));
 
-    Buf_Sys_Enable(fd_cfg, 1);
+    ret = Buf_Sys_Enable(fd_cfg, 1);
+    if (ret != 0)
+    {
+        printf("ERRNO = %d", ret);
+        return ret;
+    }
 
-    IRQ_Mask_Enable(fd_cfg, 0x1);
+    ret = IRQ_Mask_Enable(fd_cfg, 0x1);
+    if (ret != 0)
+    {
+        printf("ERRNO = %d", ret);
+        return ret;
+    }
 
     ret = Lidar_Get_MSOP(fd_lidar, lidar_output, &pkgnum, pkt); // fist msop packet need abandon
     for (int i = 0; i < 20; i++)
@@ -119,8 +171,18 @@ int main(int argc, char *argv[])
         printf("time: %.9fs\n", ((double)a.tv_nsec * 1.0e-9 + (double)a.tv_sec));
     }
 
-    IRQ_Mask_Enable(fd_cfg, 0x0);
-    Buf_Sys_Enable(fd_cfg, 0);
+    ret = IRQ_Mask_Enable(fd_cfg, 0x0);
+    if (ret != 0)
+    {
+        printf("ERRNO = %d", ret);
+        return ret;
+    }
+    ret = Buf_Sys_Enable(fd_cfg, 0);
+    if (ret != 0)
+    {
+        printf("ERRNO = %d", ret);
+        return ret;
+    }
 
     FPGA_Close(fd_cfg);
     Lidar_Close(fd_lidar);

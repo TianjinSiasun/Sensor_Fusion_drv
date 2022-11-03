@@ -64,6 +64,14 @@ typedef unsigned long long phys_addr_t;
 #define PCIE_CAMERA4_IRQ_STATUS                 0xB0
 #define PCIE_CAMERA5_IRQ_STATUS                 0xB4
 
+#define PCIE_LIDAR_IRQ                          0x01
+#define PCIE_CAMERA0_IRQ                        0x02
+#define PCIE_CAMERA1_IRQ                        0x04
+#define PCIE_CAMERA2_IRQ                        0x08
+#define PCIE_CAMERA3_IRQ                        0x10
+#define PCIE_CAMERA4_IRQ                        0x20
+#define PCIE_CAMERA5_IRQ                        0x40
+
 #define RD_CTRL_BUF_BASE_LOW                    0x80000000
 #define RD_CTRL_BUF_BASE_HI                     0x0000
 #define WR_CTRL_BUF_BASE_LOW                    0x80002000
@@ -73,6 +81,21 @@ typedef unsigned long long phys_addr_t;
 #define LIDAR_BUF_SIZE                          0x100000
 #define CAMERA_BUF_SIZE1                        0x400000
 #define CAMERA_BUF_SIZE2                        0x200000
+
+#define FPGA_DDR3_BASE                          0x100000000
+
+#define FPGA_CAMERA0_OFFSET                     0x0
+#define FPGA_CAMERA1_OFFSET                     0x800000
+#define FPGA_CAMERA2_OFFSET                     0x1000000
+#define FPGA_CAMERA3_OFFSET                     0x1800000
+#define FPGA_CAMERA4_OFFSET                     0x2000000
+#define FPGA_CAMERA5_OFFSET                     0x2800000
+#define FPGA_LIDAR_OFFSET                       0x3000000
+
+#define FPGA_BUF_SIZE                           0x4000000
+#define FPGA_LIDAR_MOVE_SIZE                    0x12c00
+#define FPGA_CAMERA_MOVE_SIZE                   0x20000
+#define FPGA_CAMERA_MOVE_OFFSET                 0x80000
 
 /**
  * struct sf_pcie_device - sensor fusion pcie device information

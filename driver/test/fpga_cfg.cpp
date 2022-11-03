@@ -10,6 +10,14 @@
 
 #include "../lib/libsfconfig.h"
 
+#define FRAME_NUM 16
+#define FRAME_OFFSET 0x4000000
+#define CAMERA_OFFSET 0x800000
+#define LIDAR_OFFSET 0x3000000
+
+#define CAMERA_COMP  5000
+#define DEADTIME  5000
+
 typedef enum
 {
     MENU_BUF_SYNC_EN = 0,
@@ -94,10 +102,10 @@ int main(int argc, char *argv[])
             if (mode == 0)
             {
                 printf("default config\n");
-                cfg.frame_num = 16;
-                cfg.frame_offset =  0x4000000;
-                cfg.camera_offset = 0x800000;
-                cfg.lidar_offset = 0x3000000;
+                cfg.frame_num = FRAME_NUM;
+                cfg.frame_offset =  FRAME_OFFSET;
+                cfg.camera_offset = CAMERA_OFFSET;
+                cfg.lidar_offset = LIDAR_OFFSET;
             }
             else
             {
@@ -132,11 +140,11 @@ int main(int argc, char *argv[])
             scanf("%d", &cfg.camera2_angle);
             printf("Please input cam 3 angle:");
             scanf("%d", &cfg.camera3_angle);
-            cfg.camera0_comp = 5000;
-            cfg.camera1_comp = 5000;
-            cfg.camera2_comp = 5000;
-            cfg.camera3_comp = 5000;
-            cfg.trigger_deadtime = 5000;
+            cfg.camera0_comp = CAMERA_COMP;
+            cfg.camera1_comp = CAMERA_COMP;
+            cfg.camera2_comp = CAMERA_COMP;
+            cfg.camera3_comp = CAMERA_COMP;
+            cfg.trigger_deadtime = DEADTIME;
 
             ret = Camera_Angle_FPS_Set(fd,cfg);
             if (ret < 0)

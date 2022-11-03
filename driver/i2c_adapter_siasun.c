@@ -11,7 +11,9 @@
 #include "i2c_adapter_siasun.h"
 #include "sensor_fusion_register.h"
 
-#define BUS_CLOCK_SET 100000
+#define IP_CLOCK_RATE  (1 * 1000 * 1000)
+#define BUS_CLOCK_LVDS (60 * 1000)
+#define BUS_CLOCK_MIPI (80 * 1000)
 
 static void siasun_adapter_hw_init(struct siasun_i2c *i2c) 
 {
@@ -228,14 +230,14 @@ int i2c_adapter_siasun_init(struct siasun_pcie_device *siasun_pcie_dev)
     {
         i2c[i].base = siasun_pcie_dev->siasun_sf_dev[0]->base_addr[4] + offset[i]; 
         i2c[i].dev = &siasun_pcie_dev->siasun_sf_dev[0]->pci_dev->dev;
-        i2c[i].ip_clk = 1 * 1000 * 1000; 
+        i2c[i].ip_clk = IP_CLOCK_RATE; 
         if ((i < 2) || (i > 3))
         {
-            i2c[i].bus_clk = 60 * 1000; 
+            i2c[i].bus_clk = BUS_CLOCK_LVDS; 
         }
         else
         {
-            i2c[i].bus_clk = 80 * 1000; 
+            i2c[i].bus_clk = BUS_CLOCK_MIPI; 
         }
 
         /*Pre-scale the clk to generate the scl signal*/

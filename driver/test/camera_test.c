@@ -38,7 +38,9 @@ int main(int argc, const char * argv[])
     if (ret < 0)
     {
         perror("query cap failed\n");
+        return -1;
     }
+
     if ((cap.capabilities & V4L2_CAP_STREAMING) && (cap.capabilities & V4L2_BUF_TYPE_VIDEO_CAPTURE))
         printf("%s:%s:%s, %#x\n", cap.driver, cap.card, cap.bus_info, cap.capabilities);
 
@@ -78,6 +80,7 @@ int main(int argc, const char * argv[])
             printf("query buf failed[%s]\n", strerror(errno));
             return ret;
         }
+
         framebuf[i].len = buf.length;
         framebuf[i].start = (char *)mmap(0, buf.length, PROT_READ, MAP_SHARED, fd, buf.m.offset);
         if (framebuf[i].start == MAP_FAILED)

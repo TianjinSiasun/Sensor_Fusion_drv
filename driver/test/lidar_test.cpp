@@ -79,7 +79,7 @@ int main(int argc, char *argv[])
     unsigned short value;
     unsigned char localip[4] = {192, 168, 1, 200};
     unsigned char destip[4] = {192, 168, 1, 102};
-    unsigned char mac[6] = {64, 44, 110, 130, 104, 226}; //本机
+    unsigned char mac[6] = {64, 44, 110, 130, 104, 226}; 
 
     RS16UcwpPkt ucwp;
     RS16DifopPkt difop;

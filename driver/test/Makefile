@@ -5,6 +5,6 @@ all:
 	g++ msop_test.cpp -o msop_test -L../lib -lsfconfig
 
 clean:
-	rm *_test
+	rm *_test -f
 
 .PHONY:clean

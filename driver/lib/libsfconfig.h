@@ -1,6 +1,10 @@
 #ifndef __LIBSFCONFIG_H__
 #define __LIBSFCONFIG_H__
 
+#define LIDAR_MOTOR_SPEED_20_FPS 1200
+#define LIDAR_MOTOR_SPEED_10_FPS 600
+#define LIDAR_MOTOR_SPEED_5_FPS 300
+
 #pragma pack(push, 1)
 
 /**
