@@ -194,7 +194,6 @@ struct camera_buf_address
  * @siasun_sf_dev: the pcie device of sensor fusion
  * @siasun_videos: the camera device information
  * @i2c_adapter: the i2c device information
- * @i2c_nr: i2c bus bum
  * @lidar_dev: the lidar device information
  * @fpga_cfg: the fpga config device information
  * @dma_base: the DMA config base addr
@@ -223,7 +222,6 @@ struct siasun_pcie_device
     struct sf_pcie_device *siasun_sf_dev[2];
     struct siasun_video_dev *siasun_videos[ALTERA_VIDEO_NUM];
     struct siasun_i2c *i2c_adapter[I2C_BUS_NUM];
-    int i2c_nr[I2C_BUS_NUM];
     struct lidar_cdev *lidar_dev;
     struct fpga_cdev *fpga_cfg;
 

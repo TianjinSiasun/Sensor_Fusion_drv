@@ -10,7 +10,7 @@ queue * siasun_create_queue(void)
     q=(queue *)kmalloc(sizeof(queue),GFP_KERNEL);
     if(q==NULL)
     {
-        printk(KERN_ERR "queue malloc failed\n");
+        DPRINTK(KERN_ERR "queue malloc failed\n");
         return NULL;
     }
 
@@ -25,13 +25,13 @@ int siasun_queue_add(queue *q,unsigned long value)
 {
     if (value > 15)
     {
-        printk(KERN_ERR "value is error!\n");
+        DPRINTK(KERN_ERR "value is error!\n");
         return -EINVAL;
     }
 
     if((q->rear + 1) % QUEUE_SIZE == q->front)
     {
-        printk(KERN_ERR "queue q is full!\n");
+        DPRINTK(KERN_ERR "queue q is full!\n");
         return -ENOMEM;
     }
 

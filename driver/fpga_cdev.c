@@ -146,18 +146,22 @@ static long fpga_cdev_ioctl(struct file *file, unsigned int cmd, unsigned long a
             if (mask & 0x2)
             {
                 camera0_irq_status_clean(pdev);
+                siasun_queue_clear(pdev->camera0_q);
             }
             if (mask & 0x4)
             {
                 camera1_irq_status_clean(pdev);
+                siasun_queue_clear(pdev->camera1_q);
             }
             if (mask & 0x8)
             {
                 camera2_irq_status_clean(pdev);
+                siasun_queue_clear(pdev->camera2_q);
             }
             if (mask & 0x10)
             {
                 camera3_irq_status_clean(pdev);
+                siasun_queue_clear(pdev->camera3_q);
             }
             break;
         }
@@ -186,6 +190,10 @@ int fpga_cdev_init(struct siasun_pcie_device *siasun_pcie_dev)
     fpga->vip_schedule = siasun_pcie_dev->siasun_sf_dev[0]->base_addr[4] + TERASIC_VIP_SCHEDULE_0_BASE;
     fpga->timestamp = siasun_pcie_dev->siasun_sf_dev[0]->base_addr[4] + TIME_STAMP_0_BASE;
     fpga->lidar_q = siasun_pcie_dev->lidar_q;
+    fpga->camera0_q = siasun_pcie_dev->camera0_q;
+    fpga->camera1_q = siasun_pcie_dev->camera1_q;
+    fpga->camera2_q = siasun_pcie_dev->camera2_q;
+    fpga->camera3_q = siasun_pcie_dev->camera3_q;
 
     ret = alloc_chrdev_region(&(fpga->devt), 0, 1, "fpga_cdev");
     if (ret)

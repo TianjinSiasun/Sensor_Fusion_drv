@@ -15,7 +15,11 @@ struct fpga_cdev
     void __iomem *timestamp;
     dev_t devt;
     struct class *cdev_class;
-    queue * lidar_q;
+    queue *lidar_q;
+    queue *camera0_q;
+    queue *camera1_q;
+    queue *camera2_q;
+    queue *camera3_q;
 };
 
 int fpga_cdev_init(struct siasun_pcie_device *siasun_pcie_dev);

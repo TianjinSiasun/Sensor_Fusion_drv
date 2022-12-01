@@ -9,6 +9,7 @@
 #include <linux/jiffies.h>
 
 #include "i2c_adapter_siasun.h"
+#include "sensor_fusion_v4l2.h"
 #include "sensor_fusion_register.h"
 
 #define IP_CLOCK_RATE  (1 * 1000 * 1000)
@@ -211,8 +212,8 @@ static const struct i2c_algorithm siasun_i2c_algo =
 };
 
 unsigned int offset[6] = {CAMERA_LVDS_0_I2C_CAMERA_CTRL_BASE, CAMERA_LVDS_1_I2C_CAMERA_CTRL_BASE,
-                          CAMERA_MIPI_0_I2C_CAMERA_CTRL_BASE, CAMERA_MIPI_1_I2C_CAMERA_CTRL_BASE,
-                          CAMERA_LVDS_2_I2C_CAMERA_CTRL_BASE, CAMERA_LVDS_3_I2C_CAMERA_CTRL_BASE};
+                          CAMERA_LVDS_2_I2C_CAMERA_CTRL_BASE, CAMERA_LVDS_3_I2C_CAMERA_CTRL_BASE,
+                          CAMERA_MIPI_0_I2C_CAMERA_CTRL_BASE, CAMERA_MIPI_1_I2C_CAMERA_CTRL_BASE};
 
 int i2c_adapter_siasun_init(struct siasun_pcie_device *siasun_pcie_dev)
 {
@@ -231,7 +232,7 @@ int i2c_adapter_siasun_init(struct siasun_pcie_device *siasun_pcie_dev)
         i2c[i].base = siasun_pcie_dev->siasun_sf_dev[0]->base_addr[4] + offset[i]; 
         i2c[i].dev = &siasun_pcie_dev->siasun_sf_dev[0]->pci_dev->dev;
         i2c[i].ip_clk = IP_CLOCK_RATE; 
-        if ((i < 2) || (i > 3))
+        if (i < 4)
         {
             i2c[i].bus_clk = BUS_CLOCK_LVDS; 
         }
@@ -254,7 +255,7 @@ int i2c_adapter_siasun_init(struct siasun_pcie_device *siasun_pcie_dev)
         i2c_add_adapter(&i2c[i].adapter);
 
         DPRINTK("i2c[%d].adapter.nr=%d\n",i,i2c[i].adapter.nr);
-        siasun_pcie_dev->i2c_nr[i] = i2c[i].adapter.nr;
+        siasun_pcie_dev->siasun_videos[i]->bus_num = i2c[i].adapter.nr;
 
         siasun_pcie_dev->i2c_adapter[i] = &i2c[i];
     }

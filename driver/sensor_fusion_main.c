@@ -526,7 +526,7 @@ irqreturn_t siasun_irq(int irq, void *dev_id)
         tasklet_schedule(&siasun_dev->task);
     }
 
-    writel(0x7f, siasun_dev->irq_base + PCIE_CRA_IRQ_ENABLE);
+    writel(0x1f, siasun_dev->irq_base + PCIE_CRA_IRQ_ENABLE);
 
     return ret;
 }
