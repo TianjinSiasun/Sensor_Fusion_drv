@@ -17,11 +17,12 @@ queue * siasun_create_queue(void)
     memset(q->data,0,sizeof(q->data));
     q->front = 0;
     q->rear = 0;
+    q->num = 0;
 
     return q;
 }
 
-int siasun_queue_add(queue *q,unsigned long value)
+int siasun_queue_add(queue *q,unsigned char value)
 {
     if (value > 15)
     {
@@ -37,14 +38,17 @@ int siasun_queue_add(queue *q,unsigned long value)
 
     q->data[q->rear] = value;
     q->rear = (q->rear + 1) % QUEUE_SIZE;
+    q->num++;
     return 0;
 }
 
-unsigned long siasun_queue_del(queue *q)
+unsigned char siasun_queue_del(queue *q)
 {
-    unsigned long ret;
+    unsigned char ret;
     ret = q->data[q->front];
     q->front = (q->front+1) % QUEUE_SIZE;
+    q->num--;
+
     return ret;
 }
 
@@ -62,6 +66,7 @@ int siasun_queue_clear(queue *q)
 {
     q->rear = 0;
     q->front = 0;
+    q->num = 0;
     return 0;
 }
 

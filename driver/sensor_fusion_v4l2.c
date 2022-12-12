@@ -34,6 +34,8 @@
 
 #define SIASUN_V4L2_MODULE_NAME "siasun_video"
 
+//unsigned int adapter_num[ALTERA_VIDEO_NUM] = {21, 22, 25, 26, 23, 24};
+
 int siasun_sync_addr[] = {CAMERA_LVDS_0_TERASIC_CAMERA_SYNC_0_BASE,
                           CAMERA_LVDS_1_TERASIC_CAMERA_SYNC_0_BASE,
                           CAMERA_LVDS_2_TERASIC_CAMERA_SYNC_0_BASE,
@@ -470,6 +472,7 @@ struct siasun_video_dev *siasun_v4l2_create_instance(struct siasun_pcie_device *
     }
 
     svid->index = index;
+//    svid->bus_num = adapter_num[index];
     svid->pci_dev = pdev->siasun_sf_dev[1]->pci_dev;
     svid->config_base = pdev->siasun_sf_dev[1]->base_addr[4];
     switch (index)

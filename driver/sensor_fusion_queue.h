@@ -11,14 +11,15 @@
  * @rear: last position of fifo
  */
 typedef struct{
-    unsigned int data[QUEUE_SIZE];
+    unsigned char data[QUEUE_SIZE];
     int front;
     int rear;
+    int num;
 }queue;
 
 queue * siasun_create_queue(void);
-int siasun_queue_add(queue *q,unsigned long value);
-unsigned long siasun_queue_del(queue *q);
+int siasun_queue_add(queue *q,unsigned char value);
+unsigned char siasun_queue_del(queue *q);
 int siasun_queue_empty(queue *q);
 int siasun_queue_full(queue *q);
 int siasun_queue_clear(queue *q);

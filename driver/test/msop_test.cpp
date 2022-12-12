@@ -155,7 +155,7 @@ int main(int argc, char *argv[])
     }
 
     ret = Lidar_Get_MSOP(fd_lidar, lidar_output, &pkgnum, pkt); // fist msop packet need abandon
-    for (int i = 0; i < 20; i++)
+    for (int i = 0; i < 50; i++)
     {
         ret = Lidar_Get_MSOP(fd_lidar, lidar_output, &pkgnum, pkt);
 
@@ -167,7 +167,9 @@ int main(int argc, char *argv[])
         us = pkt[pkgnum - 1].header.timestamp.us;
         us = (us & 0xff) << 8 | (us & 0xff00) >> 8;
 
-        printf("[%d]pkt[%d]: %d-%d-%d %hu-%hu --------------", i, pkgnum, pkt[pkgnum - 1].header.timestamp.hour, pkt[pkgnum - 1].header.timestamp.minute, pkt[pkgnum - 1].header.timestamp.second, ms, us);
+        printf("[%d] ID:%u pkt[%d]: %d-%d-%d %hu-%hu --------------", i, *(lidar_output+100*1024-1), pkgnum, 
+			    pkt[pkgnum - 1].header.timestamp.hour, pkt[pkgnum - 1].header.timestamp.minute, 
+			    pkt[pkgnum - 1].header.timestamp.second, ms, us);
         printf("time: %.9fs\n", ((double)a.tv_nsec * 1.0e-9 + (double)a.tv_sec));
     }
 

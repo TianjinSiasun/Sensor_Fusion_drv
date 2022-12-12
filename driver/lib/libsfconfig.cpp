@@ -340,7 +340,7 @@ int Lidar_Get_MSOP(int fd, unsigned char *mem, unsigned char *pkgnum, RS16MsopPk
     int ret = 0;
     unsigned char udp_buf[1248] = {0x55, 0xaa, 0x05, 0x0a, 0x5a, 0xa5, 0x50, 0xa0};
     ret = ioctl(fd, MSOP_GET_PKG, pkgnum);
-    for (int i = 0; i < *pkgnum; i++)
+    for (int i = 0; i < (*pkgnum); i++)
     {
         memcpy(&udp_buf[8], (mem + i * 1240), 1240);
         memcpy(&msop[i], udp_buf, 1248);

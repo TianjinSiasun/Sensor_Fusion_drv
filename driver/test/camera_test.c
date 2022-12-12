@@ -44,6 +44,7 @@ int main(int argc, const char * argv[])
     if ((cap.capabilities & V4L2_CAP_STREAMING) && (cap.capabilities & V4L2_BUF_TYPE_VIDEO_CAPTURE))
         printf("%s:%s:%s, %#x\n", cap.driver, cap.card, cap.bus_info, cap.capabilities);
 
+    ioctl(fd, VIDIOC_STREAMOFF, &type);
     memset(&fmt, 0, sizeof(fmt));
     fmt.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
     fmt.fmt.pix.width = 1600;
@@ -108,7 +109,7 @@ int main(int argc, const char * argv[])
         return ret;
     }
 
-    for(i = 0; i < 200; i++)
+    for(i = 0; i < 50; i++)
     {
         ret = ioctl(fd, VIDIOC_DQBUF, &buf);
         if (ret)
@@ -117,7 +118,8 @@ int main(int argc, const char * argv[])
             return ret;
         }
         gettimeofday(&tv, NULL);
-        printf("[%d] [%d] [%d] [%d] [%d] [%d] [%d] [%d]\n", *(framebuf[0].start + 9), *(framebuf[0].start + 8),
+        printf("ID:%d time:[%d]-[%d]-[%d] [%d]:[%d]:[%d].[%03d][03%d]\n", *(framebuf[1].start + 2*1024*1024 - 1),
+			   *(framebuf[0].start + 9), *(framebuf[0].start + 8),
                *(framebuf[0].start + 7), *(framebuf[0].start + 6), *(framebuf[0].start + 5), 
                *(framebuf[0].start + 4), ((*(framebuf[0].start + 3) & 0xff)<<8)|(*(framebuf[0].start + 2)&0xff),
                (*(framebuf[0].start + 1)&0xff << 8) | (*(framebuf[0].start + 0)&0xff));

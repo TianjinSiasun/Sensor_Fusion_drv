@@ -238,8 +238,7 @@ static long siasun_lidar_ioctl(struct file *file, unsigned int cmd, unsigned lon
             memset(pdev->viraddr, 0, 300 * 1024);
             pdev->data_ready = 0;
             wait_event_interruptible(pdev->wait, (pdev->data_ready == 1));
-
-            if (copy_to_user((unsigned char *)arg, &pdev->lidar_pkgs, sizeof(unsigned char)))
+            if (copy_to_user((unsigned char *)arg, &pdev->lidar_pkgs, sizeof(unsigned short)))
             {
                 printk(KERN_ERR "%s @DIFOP_GET_PKG: copy_to_user failled\n.", __FUNCTION__);
                 return -EFAULT;

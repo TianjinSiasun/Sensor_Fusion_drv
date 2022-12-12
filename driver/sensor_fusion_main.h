@@ -27,6 +27,8 @@ typedef unsigned long long phys_addr_t;
 
 #define ALTERA_DMA_DESCRIPTOR_NUM 128
 
+#define LIDAR_ADDR_OFFSET						(100 * 1024)
+
 #define ALTERA_LITE_DMA_RD_RC_LOW_SRC_ADDR      0x0000
 #define ALTERA_LITE_DMA_RD_RC_HIGH_SRC_ADDR     0x0004
 #define ALTERA_LITE_DMA_RD_CTLR_LOW_DEST_ADDR   0x0008
@@ -194,6 +196,7 @@ struct camera_buf_address
  * @siasun_sf_dev: the pcie device of sensor fusion
  * @siasun_videos: the camera device information
  * @i2c_adapter: the i2c device information
+ * @i2c_nr: i2c bus bum
  * @lidar_dev: the lidar device information
  * @fpga_cfg: the fpga config device information
  * @dma_base: the DMA config base addr
@@ -222,6 +225,7 @@ struct siasun_pcie_device
     struct sf_pcie_device *siasun_sf_dev[2];
     struct siasun_video_dev *siasun_videos[ALTERA_VIDEO_NUM];
     struct siasun_i2c *i2c_adapter[I2C_BUS_NUM];
+//    int i2c_nr[I2C_BUS_NUM];
     struct lidar_cdev *lidar_dev;
     struct fpga_cdev *fpga_cfg;
 
