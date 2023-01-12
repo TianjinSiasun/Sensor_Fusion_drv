@@ -38,9 +38,11 @@ void SYS_TIME_READ(RSTimestampYMD *time)
 
 int main(int argc, char *argv[])
 {
+
     int ret = 0;
     int fd_lidar;
     int fd_cfg;
+    unsigned int fps;
     unsigned int phy_addr;
     RSTimestampYMD lidar_time;
     unsigned char *lidar_output = (unsigned char *)malloc(LIDAR_SIZE);
@@ -50,7 +52,7 @@ int main(int argc, char *argv[])
     unsigned short ms = 0;
     unsigned short us = 0;
     unsigned char pkgnum;
-    RS16MsopPkt pkt[64];
+    RS16MsopPkt pkt[255];
 
     PIBEthNet pib_eth;
 
@@ -110,12 +112,24 @@ int main(int argc, char *argv[])
         return ret;
     }
 
+
+	
     ret = ret = Lidar_Init(fd_lidar);
     if (ret != 0)
     {
         printf("ERRNO = %d", ret);
         return ret;
     }
+    sleep(10);
+    
+    fps = 10 ;
+    ret = Lidar_Set_fps(fd_lidar, fps);
+    sleep(10) ;
+    if (ret < 0)
+    {
+        printf("ret = %d\n", ret);
+        return ret;
+     }
 
     SYS_TIME_READ(&lidar_time);
     ret = Lidar_Set_TimeStamp(fd_lidar, lidar_time);
@@ -126,7 +140,7 @@ int main(int argc, char *argv[])
     }
 
     sleep(10);
-
+    
     ret = Lidar_Get_DIFOP(fd_lidar, &difop);
     if (ret != 0)
     {
@@ -139,7 +153,7 @@ int main(int argc, char *argv[])
            difop.timestamp.hour, difop.timestamp.minute, difop.timestamp.second,
            ((difop.timestamp.ms & 0xff00) >> 8) | ((difop.timestamp.ms & 0x00ff) << 8),
            ((difop.timestamp.us & 0xff00) >> 8) | ((difop.timestamp.us & 0x00ff) << 8));
-
+	
     ret = Buf_Sys_Enable(fd_cfg, 1);
     if (ret != 0)
     {
@@ -155,9 +169,11 @@ int main(int argc, char *argv[])
     }
 
     ret = Lidar_Get_MSOP(fd_lidar, lidar_output, &pkgnum, pkt); // fist msop packet need abandon
+    
     for (int i = 0; i < 50; i++)
     {
         ret = Lidar_Get_MSOP(fd_lidar, lidar_output, &pkgnum, pkt);
+        printf("read time888 \n");
 
         clock_gettime(0, &a);
 
@@ -167,7 +183,7 @@ int main(int argc, char *argv[])
         us = pkt[pkgnum - 1].header.timestamp.us;
         us = (us & 0xff) << 8 | (us & 0xff00) >> 8;
 
-        printf("[%d] ID:%u pkt[%d]: %d-%d-%d %hu-%hu --------------", i, *(lidar_output+100*1024-1), pkgnum, 
+        printf("[%d] ID:%u pkt[%d]: %d-%d-%d %hu-%hu --------------", i, *(lidar_output+LIDAR_SIZE-1), pkgnum, 
 			    pkt[pkgnum - 1].header.timestamp.hour, pkt[pkgnum - 1].header.timestamp.minute, 
 			    pkt[pkgnum - 1].header.timestamp.second, ms, us);
         printf("time: %.9fs\n", ((double)a.tv_nsec * 1.0e-9 + (double)a.tv_sec));

@@ -216,7 +216,8 @@ int Lidar_Get_DIFOP(int fd, RS16DifopPkt *difop)
 int Lidar_Set_fps(int fd, unsigned int fps)
 {
     int ret = 0;
-    unsigned int rpm;
+    //TODO
+    unsigned short rpm;
     switch (fps)
     {
     case 20:

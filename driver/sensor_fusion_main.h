@@ -27,7 +27,7 @@ typedef unsigned long long phys_addr_t;
 
 #define ALTERA_DMA_DESCRIPTOR_NUM 128
 
-#define LIDAR_ADDR_OFFSET						(100 * 1024)
+#define LIDAR_ADDR_OFFSET						(300 * 1024)
 
 #define ALTERA_LITE_DMA_RD_RC_LOW_SRC_ADDR      0x0000
 #define ALTERA_LITE_DMA_RD_RC_HIGH_SRC_ADDR     0x0004

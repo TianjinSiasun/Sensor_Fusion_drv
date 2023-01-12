@@ -588,7 +588,6 @@ irqreturn_t siasun_irq(int irq, void *dev_id)
             num = buf_index;
             siasun_dev->lidar_dev->lidar_pkgs = (lidar_stat >> 16) & 0xff;
             DPRINTK("add buf_index = %d, lidar_pkgs = %u, lidar stat:%#x\n", buf_index, siasun_dev->lidar_dev->lidar_pkgs, lidar_stat);
-
             siasun_queue_add(siasun_pcie_dev.lidar_q, buf_index);
 
             writel(0x01, siasun_dev->irq_base + PCIE_LIDAR_IRQ_STATUS);
