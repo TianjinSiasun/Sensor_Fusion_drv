@@ -7,6 +7,7 @@
 #include <string.h>
 #include <sys/mman.h>
 #include <errno.h>
+#include "../lib/libsfconfig.h"
 
 int fd;
 
@@ -27,6 +28,14 @@ int main(int argc, const char * argv[])
     struct v4l2_buffer buf;
     struct v4l2_format fmt;
     struct timeval tv;
+
+    int fd_cfg = FPGA_Open();
+    if (fd_cfg < 0)
+    {
+        printf("open fpga_cfg failed\n");
+    }
+
+    IRQ_Mask_Enable(fd_cfg, 0xf);
 
     fd = open("/dev/video0", O_RDWR);
     if (fd < 0)
@@ -83,7 +92,7 @@ int main(int argc, const char * argv[])
         }
 
         framebuf[i].len = buf.length;
-        framebuf[i].start = (char *)mmap(0, buf.length, PROT_READ, MAP_SHARED, fd, buf.m.offset);
+        framebuf[i].start = (unsigned char *)mmap(0, buf.length, PROT_READ, MAP_SHARED, fd, buf.m.offset);
         if (framebuf[i].start == MAP_FAILED)
         {
             printf("mmap[%d] failed:[%s]\n", i, strerror(errno));
